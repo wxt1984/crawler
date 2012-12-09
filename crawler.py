@@ -1,7 +1,9 @@
 import re
 import Queue
 import urllib
+import threading
 from HTMLParser import HTMLParser
+from threading import Thread
 
 class ExtendedHTMLParser(HTMLParser):
     fanout_link = []
@@ -58,11 +60,21 @@ class UrlCrawler:
                 url_queue.put(link)
             i += 1
 
+class CrawlingThread(Thread):
+    crawler = UrlCrawler("http://www.qq.com", crawl_pages_limit = 1000)
+    
+    def run(self):
+        self.crawler.Run()
+
+for i in range(1, 5):
+    crawling_thread = CrawlingThread();
+    crawling_thread.start()
+
 #parser = ExtendedHTMLParser();
 #parser.feed(open('c:\\python27\\test.html','r').read())
 
-crawler = UrlCrawler("http://www.qq.com", crawl_pages_limit = 1000)
-crawler.Run()
-for key in crawler.url_pages.keys():
-    print key
+#crawler = UrlCrawler("http://www.qq.com", crawl_pages_limit = 1000)
+#crawler.Run()
+#for key in crawler.url_pages.keys():
+#    print key
 #print crawler.GetPage("http://www.qqq.com")
